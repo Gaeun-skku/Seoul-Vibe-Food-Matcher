@@ -5,102 +5,84 @@ import random
 import time
 
 # ==========================================
-# 1. 🤎 고급스러운 딥 브라운 그라데이션 테마
+# 1. ⚡️ 유니크 & 크레이지 네온 사이버펑크 스타일 시트 (UI 대변신)
 # ==========================================
-st.set_page_config(page_title="서울 분위기 맛집 매칭 시스템", layout="wide")
+st.set_page_config(page_title="서울 분위기 맛집 매칭 2.0", layout="wide")
 
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Noto+Sans+KR:wght@300;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Noto+Sans+KR:wght@300;700&display=swap');
     
-    .main { 
-        background: linear-gradient(135deg, #121214 0%, #1e1b18 100%); 
-        color: #f4f4f6; 
-    }
+    /* 전체 배경을 딥블랙으로, 폰트를 감각적으로 조정 */
+    .main { background-color: #050508; color: #e2e8f0; }
     * { font-family: 'Noto Sans KR', sans-serif; }
     
-    .gold-title {
-        font-family: 'Playfair Display', 'Noto Sans KR', sans-serif;
-        font-size: 3.2rem;
-        font-weight: 700;
-        color: #d4af37;
+    /* 타이틀에 움직이는 네온 광선 효과 */
+    .neon-title {
+        font-family: 'Orbitron', 'Noto Sans KR', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: #00ffcc;
         text-align: center;
-        letter-spacing: 2px;
+        text-shadow: 0 0 10px #00ffcc, 0 0 30px #00ffcc, 0 0 50px #ff007f;
+        animation: blink 2s infinite alternate;
         margin-bottom: 5px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
     }
-    .sub-text {
+    
+    /* 무용과 가은 님만의 서브타이틀 스타일 */
+    .dance-sub {
         text-align: center;
-        color: #bfae9e;
-        font-size: 0.95rem;
+        color: #ff007f;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.1rem;
         letter-spacing: 3px;
-        margin-bottom: 40px;
+        text-shadow: 0 0 8px #ff007f;
+        margin-bottom: 30px;
     }
     
-    .premium-card {
-        background: #1f1e22;
-        border: 2px solid #d4af37;
-        border-radius: 16px;
+    /* 아주 유니크한 네온 카드 스타일 */
+    .vibe-card {
+        background: linear-gradient(135deg, #11111b 0%, #0c0c14 100%);
+        border: 2px dashed #00ffcc;
+        border-radius: 25px;
         padding: 30px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-        color: #f4f4f6 !important;
+        box-shadow: 0 0 25px rgba(0, 255, 204, 0.2);
+        transition: all 0.5s ease;
     }
     
-    .card-label {
-        font-size: 14px;
-        color: #a3a19a;
-        margin-bottom: 2px;
-        margin-top: 10px;
-    }
-    .card-value {
-        font-size: 17px;
-        font-weight: 500;
-        color: #ffffff;
-        margin-bottom: 10px;
-    }
-    
-    .roulette-display {
-        font-size: 22px;
-        font-weight: 700;
-        color: #d4af37;
-        text-align: center;
-        background-color: #262429;
-        padding: 18px;
-        border-radius: 12px;
-        border: 1px solid #4a4335;
-        margin: 15px 0;
-        box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-    }
-    
+    /* 대형 룰렛 버튼 커스텀 */
     .stButton>button {
-        background: linear-gradient(135deg, #d4af37 0%, #aa841c 100%) !important;
-        color: #121214 !important;
-        border-radius: 8px !important;
+        background: linear-gradient(90deg, #ff007f 0%, #7928ca 50%, #00ffcc 100%) !important;
+        color: white !important;
+        border-radius: 50px !important;
         border: none !important;
-        padding: 14px 28px !important;
-        font-size: 16px !important;
-        font-weight: 700 !important;
+        padding: 15px 30px !important;
+        font-size: 20px !important;
+        font-weight: 900 !important;
+        font-family: 'Orbitron', 'Noto Sans KR', sans-serif;
+        box-shadow: 0 0 30px rgba(255, 0, 127, 0.6);
+        cursor: pointer;
         width: 100%;
-        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-        transition: all 0.3s ease;
     }
     .stButton>button:hover {
-        background: linear-gradient(135deg, #f3cd57 0%, #d4af37 100%) !important;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        transform: scale(1.03) rotate(-1deg);
+        box-shadow: 0 0 40px #00ffcc !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
-st.markdown('<h1 class="gold-title">SEOUL VIBE MATCHER</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-text">BIG DATA BASED SPATIAL CURATION SYSTEM</p>', unsafe_allow_html=True)
+# 화려한 웰컴 헤더
+st.markdown('<h1 class="neon-title">SEOUL VIBE MATCHER 2.0</h1>', unsafe_allow_html=True)
+st.markdown('<p class="dance-sub">BIG DATA X SPATIAL AESTHETICS — BY GAEUN CHOE</p>', unsafe_allow_html=True)
 
 # ==========================================
-# 2. 📊 서울 핵심 맛집 데이터셋 (100개 구문 오류 완전 교정)
+# 2. 📊 100+ 매머드급 실제&감성 서울 맛집 데이터셋 구축
 # ==========================================
+# 데이터 개수를 정확히 100개로 꽉 채웠습니다. 각 지역별 20개씩 밸런스를 맞췄습니다.
 neighborhoods = ["성수", "한남", "홍대/연남", "익선동", "강남/압구정"]
 vibes = ["#힙한", "#인스타감성", "#미니멀한", "#아늑한", "#전통적인"]
 
+# 100개 데이터를 생성하기 위한 베이스 소스 목록
 raw_spots = [
     # 성수 (20개)
     ("성수 미오", "성수", "#인스타감성", "트러플 파스타", 23000, 37.5446, 127.0560),
@@ -155,7 +137,7 @@ raw_spots = [
     ("테일러커피", "홍대/연남", "#미니멀한", "크림모카", 6500, 37.5585, 126.9260),
     ("소이연남", "홍대/연남", "#힙한", "소고기 쌀국수", 12000, 37.5590, 126.9220),
     ("하쿠텐라멘", "홍대/연남", "#아늑한", "돈코츠 라멘", 10000, 37.5570, 126.9250),
-    ("바다회사랑", "홍대/연남", "#힙한", "대방어 회", 35000, 37.5550, 126.1950),
+    ("바다회사랑", "홍대/연남", "#힙한", "대방어 회", 35000, 37.5550, 126.9195),
     ("연남 취향", "홍대/연남", "#인스타감성", "항정살 매콤크림파스타", 17000, 37.5605, 126.9280),
     ("레이어드 연남", "홍대/연남", "#인스타감성", "얼그레이 스콘", 5500, 37.5615, 126.9255),
     ("란콰이진", "홍대/연남", "#힙한", "목살 마라탕", 26000, 37.5598, 126.9231),
@@ -185,14 +167,14 @@ raw_spots = [
     ("종춘 떡카페", "익선동", "#전통적인", "인절미 크림떡", 4500, 37.5731, 126.9894),
     ("익선디미방", "익선동", "#아늑한", "시어링 스테이크", 32000, 37.5745, 126.9897),
     ("자연도소금빵", "익선동", "#인스타감성", "갓 구운 소금빵", 3500, 37.5737, 126.9912),
-    ("카페 식물", "익선동", "#힙한", "소년 커피", 7500, 37.5743, 126.9871),
+    ("카페 식물", "익선동", "#힙한", "소년 커피 (베일리스라떼)", 7500, 37.5743, 126.9871),
     ("익선잡방", "익선동", "#인스타감성", "감바스 알 아히요", 19000, 37.5747, 126.9901),
     ("할머니칼국수", "익선동", "#전통적인", "손칼국수", 7500, 37.5759, 126.9909),
     ("익선동 갈매기골목", "익선동", "#힙한", "국내산 생갈매기살", 17000, 37.5728, 126.9915),
 
     # 강남/압구정 (20개)
     ("강남 미트테일러", "강남/압구정", "#미니멀한", "티본 스테이크", 55000, 37.4980, 127.0280),
-    ("압구정 자유피자", "강남/압구정", "#힙한", "트러플 머쉬룸 피자", 18000, 37.5245, 127.0372),
+    ("압구정 클랩피자", "강남/압구정", "#힙한", "트러플 머쉬룸 피자", 18000, 37.5245, 127.0372),
     ("스케줄청담", "강남/압구정", "#인스타감성", "블랙트러플 리조또", 33000, 37.5252, 127.0410),
     ("먼데이투썬데이", "강남/압구정", "#인스타감성", "크로플 & 아메리카노", 12000, 37.5230, 127.0435),
     ("땀땀 강남", "강남/압구정", "#아늑한", "매운 소곱창쌀국수", 15000, 37.4992, 127.0264),
@@ -208,25 +190,30 @@ raw_spots = [
     ("포레스트 청담", "강남/압구정", "#인스타감성", "우니 파스타", 34000, 37.5248, 127.0418),
     ("헤비스테이크 강남", "강남/압구정", "#미니멀한", "직화 비프스테이크", 15900, 37.4965, 127.0299),
     ("정식당", "강남/압구정", "#미니멀한", "파인다이닝 코스", 180000, 37.5255, 127.0402),
-    ("노티드 청담", "강남/압구정", "#인스타감성", "우유생크림 도넛", 3900, 37.5242, 127.0387),
+    ("노티드 청담", "강남/압구정", "#인스타감성", "우유생크림 도넛", 39000, 37.5242, 127.0387),
     ("새마을식당 강남역점", "강남/압구정", "#전통적인", "열탄불고기", 10000, 37.4990, 127.0285),
     ("런던베이글뮤지엄 도산", "강남/압구정", "#인스타감성", "포테이토 치즈 베이글", 5500, 37.5272, 127.0361)
 ]
 
+# 데이터프레임으로 변환
 df = pd.DataFrame(raw_spots, columns=["식당명", "지역", "분위기", "대표메뉴", "평균가격", "lat", "lon"])
 
 # ==========================================
-# 3. 🧭 사이드바 조절 필터
+# 3. 🧭 사이드바 감성 필터 패널
 # ==========================================
-st.sidebar.markdown("<h3 style='color:#d4af37 !important;'>🧭 조건별 탐색</h3>", unsafe_allow_html=True)
+st.sidebar.markdown("<h2 style='color:#00ffcc !important;'>⚡️ VIBE CONTROLLER</h2>", unsafe_allow_html=True)
+st.sidebar.write("가은 님의 무용 시선으로 큐레이팅된 데이터 소스 조율 장치")
 
-selected_neighborhoods = st.sidebar.multiselect("📍 행정 구역 선택", options=neighborhoods, default=neighborhoods)
-selected_vibes = st.sidebar.multiselect("🎨 공간 무드 선택", options=vibes, default=vibes)
+# 멀티 셀렉트
+selected_neighborhoods = st.sidebar.multiselect("🎯 공간 반경 필터", options=neighborhoods, default=neighborhoods)
+selected_vibes = st.sidebar.multiselect("🎨 감성 아우라 필터", options=vibes, default=vibes)
 
+# 슬라이더
 max_price = int(df["평균가격"].max())
 min_price = int(df["평균가격"].min())
-budget = st.sidebar.slider("💰 1인 예산 상한선 (원)", min_value=min_price, max_value=max_price, value=60000, step=1000)
+budget = st.sidebar.slider("💰 1인당 가용 페이 (원)", min_value=min_price, max_value=max_price, value=50000, step=1000)
 
+# 핵심 필터링 쿼리 실행
 filtered_df = df[
     (df["지역"].isin(selected_neighborhoods)) & 
     (df["분위기"].isin(selected_vibes)) &
@@ -234,91 +221,66 @@ filtered_df = df[
 ]
 
 # ==========================================
-# 4. 🎛️ 메인 레이아웃 (좌: 데이터 대시보드 / 우: 클래식 룰렛)
+# 4. 🎛️ 메인 대시보드 뷰포트 (좌/우 2단 하이퍼 스펙 배치)
 # ==========================================
 left_col, right_col = st.columns([3, 2])
 
 with left_col:
-    st.markdown("### 🗺️ 분위기 핫플레이스 분포")
+    st.markdown("### 🗺️ SPATIAL DATA RADAR MAP")
     if not filtered_df.empty:
+        # 지도 기능 활성화
         st.map(filtered_df, latitude="lat", longitude="lon", zoom=12)
     else:
-        st.error("설정하신 예산 및 조건에 부합하는 장소가 없습니다.")
+        st.error("조건에 부합하는 공간 주파수가 없습니다. 왼쪽 제어판을 넓혀보세요!")
 
-    st.markdown("### 📊 카테고리별 가격 가치")
+    st.markdown("### 📊 VISUAL PRICE GRAPHICS")
     if not filtered_df.empty:
-        fig = px.scatter(
+        # Plotly 화려한 사이버펑크 믹스 차트
+        fig = px.strip(
             filtered_df, 
             x="지역", 
             y="평균가격", 
             color="분위기",
-            size="평균가격",
             hover_data=["식당명", "대표메뉴"],
-            title="조건별 매칭 결과 시각화 분포",
-            labels={"평균가격": "가격대 (원)", "지역": "로케이션"},
+            title="필터링된 맛집들의 공간 시각 데이터 분포",
+            labels={"평균가격": "가격 레벨", "지역": "로케이션"},
             template="plotly_dark"
         )
-        fig.update_layout(
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#f4f4f6")
-        )
+        fig.update_traces(marker=dict(size=12, opacity=0.8, line=dict(width=1, color='White')))
         st.plotly_chart(fig, use_container_width=True)
 
 with right_col:
-    st.markdown("### 🎰 장소 추천 룰렛")
-    st.write("선택된 필터 조건 중에서 임의로 하나의 장소를 선별합니다.")
+    st.markdown("### 🎰 DIGITAL VIBE ROULETTE")
+    st.write("알고리즘을 통해 오늘의 완벽한 예술적 공간 하나를 도출합니다.")
     
-    roulette_placeholder = st.empty()
-    result_placeholder = st.empty()
-    
-    if st.button("🎲 맛집 룰렛 돌리기"):
+    if st.button("🔮 DESTINY SPIN (오늘 뭐 먹지?)"):
         if not filtered_df.empty:
-            result_placeholder.empty()
+            # 롤렛 돌리는 서스펜스 연출 효과 애니메이션
+            with st.spinner("⚡️ 최적의 공간 감성 주파수 스캔 중..."):
+                time.sleep(1.2) # 극적인 서스펜스 1.2초 지연 효과
             
-            # 🔄 3초간 롤링 애니메이션
-            duration = 3.0  
-            start_time = time.time()
-            all_matching_names = filtered_df["식당명"].tolist()
-            
-            while time.time() - start_time < duration:
-                elapsed = time.time() - start_time
-                wait_time = 0.05 + (elapsed / duration) ** 2 * 0.3  
-                
-                temp_name = random.choice(all_matching_names)
-                roulette_placeholder.markdown(f'<div class="roulette-display">🔄 회전 중... [ {temp_name} ]</div>', unsafe_allow_html=True)
-                time.sleep(wait_time)
-            
-            roulette_placeholder.empty()
-            
-            # 최종 정착 데이터 추출
             random_pick = filtered_df.sample(n=1).iloc[0]
+            st.balloons() 
             
-            # HTML 렌더링 정상 처리 카드 작동
-            result_placeholder.markdown(f"""
-            <div class="premium-card">
-                <h3 style="margin-top:0; color:#d4af37 !important; font-size:25px; font-weight:700; letter-spacing:0.5px;">🍷 추천 공간: {random_pick['식당명']}</h3>
-                <hr style="border-top: 2px solid #4a4335; margin:15px 0;">
-                
-                <div class="card-label">📍 로케이션</div>
-                <div class="card-value">{random_pick['지역']}</div>
-                
-                <div class="card-label">✨ 분위기 무드</div>
-                <div class="card-value" style="color:#e5c158 !important; font-weight:700;">{random_pick['분위기']}</div>
-                
-                <div class="card-label">🍽️ 시그니처 다이닝</div>
-                <div class="card-value">{random_pick['대표메뉴']}</div>
-                
-                <div class="card-label">💰 평균 예산</div>
-                <div class="card-value" style="font-size:20px; color:#ffffff; font-weight:700; margin-bottom:0;">₩{random_pick['평균가격']:,}원</div>
+            # 완전히 개성 넘치는 전용 네온 카드 컴포넌트 팝업
+            st.markdown(f"""
+            <div class="vibe-card">
+                <h3 style="margin-top:0; color:#00ffcc !important; font-size:26px; text-shadow: 0 0 10px #00ffcc;">⚜️ {random_pick['식당명']}</h3>
+                <p style="color:#8892b0; margin-bottom:15px;">{random_pick['지역']} 구역에 위치한 최고의 매칭 스팟</p>
+                <hr style="border-top: 1px dashed #ff007f; margin:15px 0;">
+                <p style="font-size:16px;"><b>🎭 무드 캐릭터:</b> <span style="color:#ff007f; font-weight:700; text-shadow: 0 0 5px #ff007f;">{random_pick['분위기']}</span></p>
+                <p style="font-size:16px;"><b>🍱 마스터피스 식음:</b> {random_pick['대표메뉴']}</p>
+                <p style="font-size:20px; color:#00ffcc; font-weight:bold; margin-top:15px;">💳 가격 가치: ₩{random_pick['평균가격']:,}원</p>
             </div>
             """, unsafe_allow_html=True)
         else:
-            st.error("매칭된 데이터가 없습니다. 상단 필터를 조정해 주세요.")
+            st.error("룰렛을 돌릴 타겟 데이터가 바닥났습니다. 필터를 초기화하세요!")
 
     st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("### 📋 분석 완료된 데이터셋")
-    st.markdown(f"현재 매칭 풀(Pool): **{len(filtered_df)}**개 장소 검색됨")
+    st.markdown("### 📋 DATA FEED (총 데이터 소스 개수)")
+    
+    # 상단에 필터링된 총 매칭 개수를 네온 컬러 배지로 표기
+    st.markdown(f"현재 매칭률: <span style='color:#00ffcc; font-weight:bold; font-size:1.5rem;'>{len(filtered_df)}</span> / 100개 데이터 검색 완료", unsafe_allow_html=True)
     
     if not filtered_df.empty:
         display_df = filtered_df.copy()
