@@ -5,7 +5,7 @@ import random
 import time
 
 # ==========================================
-# 1. 🤎 모던 럭셔리 다크 & 골드 테마 (네온 제거)
+# 1. 🤎 고급스러운 딥 브라운 그라데이션 테마 (글씨 가독성 보완)
 # ==========================================
 st.set_page_config(page_title="서울 분위기 맛집 매칭 시스템", layout="wide")
 
@@ -13,35 +13,53 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Noto+Sans+KR:wght@300;500;700&display=swap');
     
-    /* 네온을 제거하고 차분한 브라운/차콜 계열 배경 적용 */
-    .main { background-color: #121214; color: #e8e6e3; }
+    /* 심심하지 않도록 딥 차콜에서 고급스러운 브라운으로 이어지는 그라데이션 배경 적용 */
+    .main { 
+        background: linear-gradient(135deg, #121214 0%, #1e1b18 100%); 
+        color: #f4f4f6; 
+    }
     * { font-family: 'Noto Sans KR', sans-serif; }
     
     /* 타이틀: 고풍스럽고 세련된 세리프 서체와 골드 컬러 */
     .gold-title {
         font-family: 'Playfair Display', 'Noto Sans KR', sans-serif;
-        font-size: 3rem;
+        font-size: 3.2rem;
         font-weight: 700;
         color: #d4af37;
         text-align: center;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
         margin-bottom: 5px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
     }
     .sub-text {
         text-align: center;
-        color: #a3a3a6;
-        font-size: 1rem;
-        letter-spacing: 2px;
-        margin-bottom: 35px;
+        color: #bfae9e;
+        font-size: 0.95rem;
+        letter-spacing: 3px;
+        margin-bottom: 40px;
     }
     
-    /* 미니멀하고 고급스러운 카드 디자인 */
+    /* 입체감 있고 고급스러운 카드 디자인 (글씨색을 밝은 색으로 명확히 지정) */
     .premium-card {
-        background-color: #1a1a1e;
-        border: 1px solid #383223;
+        background: #1f1e22;
+        border: 2px solid #d4af37;
         border-radius: 16px;
         padding: 30px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        color: #f4f4f6 !important; /* 검정 배경에 묻히지 않도록 밝은 아이보리색 강제 적용 */
+    }
+    
+    /* 결과 카드 내부 텍스트 스타일 정의 */
+    .card-label {
+        font-size: 15px;
+        color: #c7c4bb;
+        margin-bottom: 4px;
+    }
+    .card-value {
+        font-size: 17px;
+        font-weight: 500;
+        color: #ffffff;
+        margin-bottom: 12px;
     }
     
     /* 룰렛 연출용 텍스트 박스 */
@@ -50,16 +68,17 @@ st.markdown("""
         font-weight: 700;
         color: #d4af37;
         text-align: center;
-        background-color: #1a1a1e;
-        padding: 15px;
-        border-radius: 8px;
-        border: 1px solid #333;
-        margin: 10px 0;
+        background-color: #262429;
+        padding: 18px;
+        border-radius: 12px;
+        border: 1px solid #4a4335;
+        margin: 15px 0;
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
     }
     
     /* 클래식한 버튼 스타일 */
     .stButton>button {
-        background: #d4af37 !important;
+        background: linear-gradient(135deg, #d4af37 0%, #aa841c 100%) !important;
         color: #121214 !important;
         border-radius: 8px !important;
         border: none !important;
@@ -67,11 +86,13 @@ st.markdown("""
         font-size: 16px !important;
         font-weight: 700 !important;
         width: 100%;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         transition: all 0.3s ease;
     }
     .stButton>button:hover {
-        background: #f3cd57 !important;
+        background: linear-gradient(135deg, #f3cd57 0%, #d4af37 100%) !important;
         transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
     }
     </style>
     """, unsafe_allow_html=True)
@@ -81,7 +102,7 @@ st.markdown('<h1 class="gold-title">SEOUL VIBE MATCHER</h1>', unsafe_allow_html=
 st.markdown('<p class="sub-text">BIG DATA BASED SPATIAL CURATION SYSTEM</p>', unsafe_allow_html=True)
 
 # ==========================================
-# 2. 📊 서울 핵심 맛집 데이터셋 (정확히 100개 최종 검수)
+# 2. 📊 서울 핵심 맛집 데이터셋 (100개)
 # ==========================================
 neighborhoods = ["성수", "한남", "홍대/연남", "익선동", "강남/압구정"]
 vibes = ["#힙한", "#인스타감성", "#미니멀한", "#아늑한", "#전통적인"]
@@ -131,7 +152,7 @@ raw_spots = [
     ("소와나", "한남", "#미니멀한", "한우 오마카세 5종", 69000, 37.5359, 126.9975),
     ("비밀 한남점", "한남", "#인스타감성", "문어 로제 리조또", 24000, 37.5377, 127.0028),
 
-    # 홍대/연남 (20개) - 오타 부분 완벽하게 수정 완료!
+    # 홍대/연남 (20개)
     ("홍대 네온펍", "홍대/연남", "#힙한", "수제맥주 & 플래터", 16000, 37.5565, 126.9239),
     ("연남 연하동", "홍대/연남", "#인스타감성", "대왕후토마끼", 28000, 37.5610, 126.9245),
     ("감칠 연남", "홍대/연남", "#아늑한", "달래된장크림파스타", 17000, 37.5622, 126.9270),
@@ -246,7 +267,7 @@ with left_col:
         fig.update_layout(
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#e8e6e3")
+            font=dict(color="#f4f4f6")
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -261,14 +282,13 @@ with right_col:
         if not filtered_df.empty:
             result_placeholder.empty()
             
-            # 🔄 3초간 실제 슬롯머신처럼 리스트가 롤링되는 효과 연출
+            # 🔄 3초간 롤링 애니메이션
             duration = 3.0  
             start_time = time.time()
             all_matching_names = filtered_df["식당명"].tolist()
             
             while time.time() - start_time < duration:
                 elapsed = time.time() - start_time
-                # 감속도 계산 (점점 회전 주기가 길어짐)
                 wait_time = 0.05 + (elapsed / duration) ** 2 * 0.3  
                 
                 temp_name = random.choice(all_matching_names)
@@ -277,17 +297,26 @@ with right_col:
             
             roulette_placeholder.empty()
             
-            # 최종 결과 도출 및 프리미엄 카드 출력
+            # 최종 정착 데이터 추출
             random_pick = filtered_df.sample(n=1).iloc[0]
             
+            # 🎨 완전히 보완된 밝은 텍스트 컬러 디자인 카드 출력
             result_placeholder.markdown(f"""
             <div class="premium-card">
-                <h3 style="margin-top:0; color:#d4af37 !important; font-size:24px;">🍷 추천 공간: {random_pick['식당명']}</h3>
-                <hr style="border-top: 1px solid #383223; margin:15px 0;">
-                <p style="font-size:16px; margin: 8px 0;"><b>위치성:</b> {random_pick['지역']}</p>
-                <p style="font-size:16px; margin: 8px 0;"><b>공간감:</b> <span style="color:#d4af37;">{random_pick['분위기']}</span></p>
-                <p style="font-size:16px; margin: 8px 0;"><b>주요 다이닝:</b> {random_pick['대표메뉴']}</p>
-                <p style="font-size:18px; color:#e8e6e3; font-weight:700; margin-top:15px;">예상 비용: ₩{random_pick['평균가격']:,}원</p>
+                <h3 style="margin-top:0; color:#d4af37 !important; font-size:25px; font-weight:700; letter-spacing:0.5px;">🍷 추천 공간: {random_pick['식당명']}</h3>
+                <hr style="border-top: 2px solid #4a4335; margin:15px 0;">
+                
+                <div class="card-label">📍 로케이션</div>
+                <div class="card-value">{random_pick['지역']}</div>
+                
+                <div class="card-label">✨ 분위기 무드</div>
+                <div class="card-value" style="color:#e5c158 !important; font-weight:700;">{random_pick['분위기']}</div>
+                
+                <div class="card-label">🍽️ 시그니처 다이닝</div>
+                <div class="card-value">{random_pick['대표메뉴']}</div>
+                
+                <div class="card-label">💰 평균 예산</div>
+                <div class="card-value" style="font-size:20px; color:#ffffff; font-weight:700; margin-bottom:0;">₩{random_pick['평균가격']:,}원</div>
             </div>
             """, unsafe_allow_html=True)
         else:
