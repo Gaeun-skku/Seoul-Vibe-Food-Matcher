@@ -6,7 +6,7 @@ import time
 import os
 import urllib.parse
 
-# 1. 🌐 글로벌 다국어 번역 및 필터 맵핑 사전 (카테고리 추가)
+# 1. 🌐 글로벌 다국어 번역 및 필터 맵핑 사전
 LANG_DICT = {
     "KO": {
         "title": "서울 & 경기 감성 미식 매칭 시스템", "sub": "300개 프리미엄 로케이션 글로벌 큐레이션", "filter": "🧭 큐레이션 필터",
@@ -37,7 +37,7 @@ LANG_DICT = {
         "map_btn": "💚 Open in Naver Map"
     },
     "ZH": {
-        "title": "首尔 & 京畿感性美食品配系统", "sub": "300个大型奢华空间专业精选策展", "filter": "🧭 策展筛选器",
+        "title": "首尔 & 京畿感性美食品配系统", "sub": "300个大型奢华空间专业精选策展", "filter": "🧭 筛选器",
         "region_label": "📍 选择行政区与近郊", "vibe_label": "🎨 空间设计氛围", "cate_label": "🍽️ 美食料理菜系", "budget_label": "💰 单人用餐预算上限 (韩元)",
         "map_title": "🗺️ 广域美食品类分布地图", "chart_title": "📊 餐厅价值定位量化分析",
         "roulette_title": "🎰 奢华美食推荐智慧轮盘", "roulette_sub": "在您启用的搜索过滤范围内自动检索并随机匹配一个空间。",
@@ -52,14 +52,14 @@ LANG_DICT = {
     },
     "JA": {
         "title": "ソウル＆京畿 感性グルメマッチング", "sub": "300の大規模プレミアムロケーション選定", "filter": "🧭 キュレーションフィルタ",
-        "region_label": "📍 行政区・郊外エリアの選択", "vibe_label": "🎨 空間デザインのムード", "cate_label": "🍽️ 料理カテゴリー", "budget_label": "💰 1人あたりの上限予算 (ウォン)",
+        "region_label": "📍 行政区・郊外エリア의 選択", "vibe_label": "🎨 空間デザイン의 ムード", "cate_label": "🍽️ 料理カテゴリー", "budget_label": "💰 1人あたりの上限予算 (ウォン)",
         "map_title": "🗺️ 広域ダイニング空間分布マップ", "chart_title": "📊 ダイニング価値ポジショニング分析",
-        "roulette_title": "🎰 プレミアムダイニング 마ッチングルーレット", "roulette_sub": "選択された条件を満たす極上の空間をスキャンし、ランダムでマッチングします。",
+        "roulette_title": "🎰 プレミアムダイニング マッチングルーレット", "roulette_sub": "選択された条件を満たす極上の空間をスキャンし、ランダムでマッチングします。",
         "btn_roll": "✨ ディスカバリールーレット起動", "rolling": "🔄 マッチングプールを高速分析中... [ {} ]", "match_success": "🍷 マッチング空間: {}",
-        "loc": "📍 ロケーション", "vd": "✨ スタイルムード", "ct": "🍽️ 料理の種類", "mn": "🍕 シグネチャーメニュー", "bg": "💰 コストバリュー",
+        "loc": "📍 ロケーション", "vd": "✨ スタイルムード", "ct": "🍽️ 料理の種類", "mn": "🍕 シグネチャーメニュー", "bg": "💰 コ스트バリュー",
         "pool_title": "📋 オープンマッチングデータプール", "pool_sub": "現在アルゴリズム内の有効スポット: **{}** 軒 (店名クリックでNaverマップへ)",
-        "err_no_data": "条件에 맞는 グルメが見つかりません。条件を広げてみてください！", "err_empty": "プールが空です。フィルターの制約を緩和してください。",
-        "regions": {"성수": "聖水(ソンス)", "한남": "漢南(ハンナム)", "홍대/연남": "弘大/延南", "익선동": "益善洞(イクソンドン)", "강남/압구정": "江南/狎鴎亭", "경기 근교": "京畿郊外"},
+        "err_no_data": "条件에 맞는 グルメが見つかりません。条件을 広げてみてください！", "err_empty": "プール가 空입니다. フィルター의 制約을 緩和してください。",
+        "regions": {"성수": "聖水(ソンス)", "한남": "漢南(ハンナム)", "홍대/연남": "弘大/延南", "익선동": "益善洞(イクソンドン)", "강남/압구정": "江南/狎鴎亭", "경기 근교": "京畿郊외"},
         "vibes": {"#힙한": "#ヒップな", "#인스타감성": "#インスタ映え", "#미니멀한": "#ミニマルな", "#아늑한": "#居心地の良い", "#전통적인": "#伝統的な"},
         "cates": {"한식": "韓国料理", "일식": "日本料理", "중식": "中華料理", "양식": "洋食"},
         "map_btn": "💚 Naverマップで見る"
@@ -68,7 +68,7 @@ LANG_DICT = {
 
 st.set_page_config(page_title="SEOUL METRO DINING MATCHER", layout="wide")
 
-# 2. 🎨 프리미엄 고딕 & 리얼 화이트 스킨 디자인 정의
+# 2. 🎨 디자인 스타일 시트
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Pretendard:wght@300;500;700;900&display=swap');
@@ -93,7 +93,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 3. 🌐 세션 언어 감지 시스템
+# 3. 🌐 세션 언어 설정
 if "lang" not in st.session_state:
     st.session_state.lang = "KO"
 
@@ -113,7 +113,7 @@ T = LANG_DICT[st.session_state.lang]
 st.markdown(f'<h1 class="gold-title">{T["title"]}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p style="text-align:center; color:#64748b; font-size:0.95rem; font-weight:500; margin-bottom:40px;">{T["sub"]}</p>', unsafe_allow_html=True)
 
-# 4. 📁 300선 데이터 로드
+# 4. 📁 데이터 로드
 txt_file = "restaurants.txt"
 if os.path.exists(txt_file):
     df = pd.read_csv(txt_file, encoding="utf-8")
@@ -121,7 +121,7 @@ else:
     st.error("⚠️ 'restaurants.txt' 파일이 누락되었습니다.")
     st.stop()
 
-# 5. 🎯 사이드바 필터 리얼타임 변환 및 다국어 역추적 연동
+# 5. 🎯 사이드바 필터 설정
 regions_pool = ["성수", "한남", "홍대/연남", "익선동", "강남/압구정", "경기 근교"]
 vibes_pool = ["#힙한", "#인스타감성", "#미니멀한", "#아늑한", "#전통적인"]
 cates_pool = ["한식", "일식", "중식", "양식"]
@@ -145,14 +145,13 @@ final_regions = [region_reverse_map[tr] for tr in selected_regions_trans]
 final_vibes = [vibe_reverse_map[tv] for tv in selected_vibes_trans]
 final_cates = [cate_reverse_map[tc] for tc in selected_cates_trans]
 
-# 데이터에 '카테고리' 컬럼이 존재할 경우에만 다중 필터 적용 구현
 if "카테고리" in df.columns:
     filtered_df = df[(df["지역"].isin(final_regions)) & (df["분위기"].isin(final_vibes)) & (df["카테고리"].isin(final_cates)) & (df["평균가격"] <= budget)]
 else:
     filtered_df = df[(df["지역"].isin(final_regions)) & (df["분위기"].isin(final_vibes)) & (df["평균가격"] <= budget)]
     st.sidebar.warning("⚠️ txt 파일 첫 줄에 '카테고리' 컬럼 명을 먼저 추가해 주세요!")
 
-# 6. 🎛️ 레이아웃 구성
+# 6. 🎛️ 메인 레이아웃
 left_col, right_col = st.columns([3, 2])
 
 with left_col:
@@ -196,10 +195,11 @@ with right_col:
             roulette_placeholder.empty()
             random_pick = filtered_df.sample(n=1).iloc[0]
             
-            encoded_query = urllib.parse.quote(f"{random_pick['지역']} {random_pick['식당명']}")
+            # [수정 포인트 1] 네이버 지도 검색 쿼리 최적화 (식당명 단독 혹은 지역명 분리 조합)
+            search_keyword = f"{random_pick['식당명']}"
+            encoded_query = urllib.parse.quote(search_keyword)
             naver_map_url = f"https://map.naver.com/v5/search/{encoded_query}"
             
-            # 카테고리 정보가 텍스트에 들어있을 경우 카드에 렌더링하도록 예외 처리
             cate_val = T["cates"][random_pick['카테고리']] if "카테고리" in random_pick else "-"
             
             card_html = f"""
@@ -224,24 +224,26 @@ with right_col:
     
     if not filtered_df.empty:
         display_df = filtered_df.copy()
+        
+        # [수정 포인트 2] 데이터 풀 내 클릭용 네이버 지도 URL 필드 정밀 생성
+        display_df["지도링크"] = display_df["식당명"].apply(lambda name: f"https://map.naver.com/v5/search/{urllib.parse.quote(name)}")
+        
+        # 다국어 데이터 매핑
         display_df["지역"] = display_df["지역"].map(T["regions"])
         display_df["분위기"] = display_df["분위기"].map(T["vibes"])
         if "카테고리" in display_df.columns:
             display_df["카테고리"] = display_df["카테고리"].map(T["cates"])
         display_df["평균가격"] = display_df["평균가격"].map("{:,}원".format)
         
-        display_df["식당명"] = display_df.apply(
-            lambda r: f"https://map.naver.com/v5/search/{urllib.parse.quote(r['지역'] + ' ' + r['식당명'])}", axis=1
-        )
+        target_cols = ["식당명", "지도링크", "지역", "분위기", "카테고리", "대표메뉴", "평균가격"] if "카테고리" in display_df.columns else ["식당명", "지도링크", "지역", "분위기", "대표메뉴", "평균가격"]
         
-        target_cols = ["식당명", "지역", "분위기", "카테고리", "대표메뉴", "평균가격"] if "카테고리" in display_df.columns else ["식당명", "지역", "분위기", "대표메뉴", "평균가격"]
-        
+        # [수정 포인트 3] 데이터 에디터 컴포넌트의 링크 바인딩 정규식 제거 및 다이렉트 매칭 처리
         st.data_editor(
             display_df[target_cols],
             column_config={
-                "식당명": st.column_config.LinkColumn(
-                    "식당명 (Naver Map)",
-                    display_text=r"https://map\.naver\.com/v5/search/.*%20(.*)"
+                "지도링크": st.column_config.LinkColumn(
+                    "🗺️ Naver Map",
+                    display_text="바로가기 ↗"
                 )
             },
             use_container_width=True,
