@@ -1,0 +1,160 @@
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+import random
+
+# ==========================================
+# 1. 페이지 기본 설정 및 네온 테마 스타일링 (3단계: UI Polishing)
+# ==========================================
+st.set_page_config(page_title="Seoul Vibe Food Matcher", layout="wide")
+
+# 사이트 내부 스타일을 네온/다크 분위기로 커스텀 (CSS 주입)
+st.markdown("""
+    <style>
+    .main { background-color: #0e1117; }
+    h1 { color: #00ffcc !important; text-shadow: 0 0 10px #00ffcc; }
+    h2, h3 { color: #ff007f !important; }
+    .stButton>button {
+        background-color: #ff007f !important;
+        color: white !important;
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 0 15px #ff007f;
+        font-weight: bold;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+st.title("🌌 Seoul \"Vibe\" Food Matcher")
+st.caption("A Spatial & Aesthetic Dining Guide by Gaeun Choe (Dance Major, SKKU)")
+st.markdown("---")
+
+# ==========================================
+# 2. 데이터셋 확장 및 위도/경도 추가 (2단계: Map Setup)
+# ==========================================
+# 지도에 핀을 꽂기 위해 실제 서울 주요 핫플의 위도(lat)와 경도(lon)를 넣었습니다.
+data = {
+    "Restaurant": [
+        "Seongsu Pastamio", "Hannam Oasis", "Hongdae Neon Pub", 
+        "Ikseon Hanok Tea", "Gangnam Bistro", "Seongsu Wood Cafe", 
+        "Hannam Soundbar", "Yeonnam Coziness", "Apgujeong Glam", "Euljiro Vintage"
+    ],
+    "Neighborhood": [
+        "Seongsu", "Hannam", "Hongdae", 
+        "Ikseon-dong", "Gangnam", "Seongsu", 
+        "Hannam", "Hongdae", "Apgujeong", "Euljiro"
+    ],
+    "Vibe": [
+        "#Instagrammable", "#Minimalist", "#Hip", 
+        "#Traditional", "#Cozy", "#Minimalist", 
+        "#Hip", "#Cozy", "#Instagrammable", "#Hip"
+    ],
+    "MainMenu": [
+        "Truffle Pasta", "Avocado Toast", "Craft Beer & Fries", 
+        "Matcha Tart & Tea", "Ribeye Steak", "Filter Coffee", 
+        "Natural Wine & Cheese", "Cream Brick Pasta", "Champagne & Sushi", "Euljiro Cider & Platter"
+    ],
+    "AvgPrice": [22000, 18000, 15000, 9000, 45000, 7000, 35000, 19000, 60000, 12000],
+    # 서울 실제 지역별 근접 위도/경도 데이터
+    "lat": [37.5446, 37.5340, 37.5565, 37.5744, 37.4980, 37.5425, 37.5315, 37.5610, 37.5265, 37.5661],
+    "lon": [127.0560, 127.0026, 126.9239, 126.9890, 127.0280, 127.0589, 127.0055, 126.9245, 127.0380, 126.9926]
+}
+
+df = pd.DataFrame(data)
+
+# ==========================================
+# 3. 사이드바 필터 제어 패널
+# ==========================================
+st.sidebar.header("🧭 Filter Your Vibe")
+
+# 지역 필터
+all_neighborhoods = df["Neighborhood"].unique().tolist()
+selected_neighborhoods = st.sidebar.multiselect(
+    "Select Neighborhood(s):", 
+    options=all_neighborhoods, 
+    default=all_neighborhoods
+)
+
+# 분위기 필터
+all_vibes = df["Vibe"].unique().tolist()
+selected_vibes = st.sidebar.multiselect(
+    "Select Mood Vibe(s):", 
+    options=all_vibes, 
+    default=all_vibes
+)
+
+# 예산 슬라이더
+max_price = int(df["AvgPrice"].max())
+min_price = int(df["AvgPrice"].min())
+budget = st.sidebar.slider(
+    "Maximum Budget (KRW):", 
+    min_value=min_price, 
+    max_value=max_price, 
+    value=max_price,
+    step=1000
+)
+
+# 필터 매칭 로직 실행
+filtered_df = df[
+    (df["Neighborhood"].isin(selected_neighborhoods)) & 
+    (df["Vibe"].isin(selected_vibes)) &
+    (df["AvgPrice"] <= budget)
+]
+
+# ==========================================
+# 4. 메인 대시보드 화면 구성 (2, 3단계 레이아웃)
+# ==========================================
+left_col, right_col = st.columns([3, 2])
+
+with left_col:
+    st.subheader("📍 Interactive Vibe Map (2단계: 지도 구현)")
+    if not filtered_df.empty:
+        # st.map을 이용해 위도 경도 기반으로 지도에 핀 꽂기
+        st.map(filtered_df, latitude="lat", longitude="lon", zoom=11)
+    else:
+        st.error("No locations to display on the map. Adjust your filters!")
+
+    st.subheader("📊 Price Distribution by District (3단계: 통계 차트)")
+    if not filtered_df.empty:
+        # Plotly를 이용한 멋진 인터랙티브 막대 그래프
+        fig = px.bar(
+            filtered_df, 
+            x="Neighborhood", 
+            y="AvgPrice", 
+            color="Vibe",
+            hover_data=["Restaurant", "MainMenu"],
+            title="Average Price by Neighborhood & Vibe",
+            labels={"AvgPrice": "Price (KRW)", "Neighborhood": "District"},
+            template="plotly_dark"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+with right_col:
+    st.subheader("🎰 Vibe Roulette (3단계: 랜덤 추천)")
+    st.write("Click below to let fate decide your next aesthetic dining experience!")
+    
+    if st.button("🔮 What should I eat today?"):
+        if not filtered_df.empty:
+            random_pick = filtered_df.sample(n=1).iloc[0]
+            st.balloons() # 풍선 터지는 효과
+            
+            # 추천 결과를 카드 형태로 예쁘게 강조
+            st.markdown(f"""
+            <div style="background-color: #1e1e2e; padding: 20px; border-radius: 15px; border: 2px solid #ff007f;">
+                <h3 style="margin-top:0; color:#00ffcc !important;">✨ {random_pick['Restaurant']}</h3>
+                <p><b>📍 Location:</b> {random_pick['Neighborhood']}</p>
+                <p><b>🎨 Spatial Vibe:</b> <span style="color:#ff007f;">{random_pick['Vibe']}</span></p>
+                <p><b>🍽️ Signature Menu:</b> {random_pick['MainMenu']}</p>
+                <p><b>💰 Price:</b> ₩{random_pick['AvgPrice']:,}</p>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.error("Please match your filters first to roll the roulette!")
+
+    st.markdown("---")
+    st.subheader("📋 Matched Spots Data")
+    if not filtered_df.empty:
+        # 가격 포맷 가공 후 데이터 프레임 출력
+        display_df = filtered_df.copy()
+        display_df["AvgPrice"] = display_df["AvgPrice"].map("₩{:,}".format)
+        st.dataframe(display_df[["Restaurant", "Neighborhood", "Vibe", "MainMenu", "AvgPrice"]], use_container_width=True)
