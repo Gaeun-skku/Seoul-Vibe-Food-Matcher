@@ -4,60 +4,64 @@ import plotly.express as px
 import random
 import time
 import os
-import urllib.parse  # 네이버 지도 URL 인코딩용
+import urllib.parse
 
-# 1. 🌐 글로벌 다국어 번역 및 필터 맵핑 사전
+# 1. 🌐 글로벌 다국어 번역 및 필터 맵핑 사전 (카테고리 추가)
 LANG_DICT = {
     "KO": {
         "title": "서울 & 경기 감성 미식 매칭 시스템", "sub": "300개 프리미엄 로케이션 글로벌 큐레이션", "filter": "🧭 큐레이션 필터",
-        "region_label": "📍 행정 구역 및 지역 선택", "vibe_label": "🎨 공간 디자인 무드", "budget_label": "💰 1인 다이닝 상한선 (원)",
+        "region_label": "📍 행정 구역 및 지역 선택", "vibe_label": "🎨 공간 디자인 무드", "cate_label": "🍽️ 요리 카테고리 종류", "budget_label": "💰 1인 다이닝 상한선 (원)",
         "map_title": "🗺️ 광역 다이닝 공간 분포 지도", "chart_title": "📊 다이닝 가치 포지셔닝 분석",
         "roulette_title": "🎰 프리미엄 다이닝 매칭 룰렛", "roulette_sub": "선택된 조건 아래 엄선된 매장을 스캔하여 무작위 매칭합니다.",
         "btn_roll": "✨ 디스커버리 룰렛 가동", "rolling": "🔄 매칭 풀 분석 중... [ {} ]", "match_success": "🍷 매칭 완벽 공간: {}",
-        "loc": "📍 파트 로케이션", "vd": "✨ 스타일 무드", "mn": "🍽️ 시그니처 다이닝", "bg": "💰 코스트 밸류",
+        "loc": "📍 파트 로케이션", "vd": "✨ 스타일 무드", "ct": "🍽️ 카테고리", "mn": "🍕 시그니처 다이닝", "bg": "💰 코스트 밸류",
         "pool_title": "📋 오픈 매칭 데이터 풀 (Pool)", "pool_sub": "현재 알고리즘 내 유효 스팟: **{}**개 매칭 가능 (이름 클릭 시 네이버 지도 이동)",
-        "err_no_data": "필터에 부합하는 맛집이 없습니다. 상한선이나 구역을 늘려보세요!", "err_empty": "풀이 비어있습니다. 필터 제약을 완화해 주세요.",
+        "err_no_data": "필터에 부합하는 맛집이 없습니다. 상한선이나 카테고리를 변경해 보세요!", "err_empty": "풀이 비어있습니다. 필터 제약을 완화해 주세요.",
         "regions": {"성수": "성수", "한남": "한남", "홍대/연남": "홍대/연남", "익선동": "익선동", "강남/압구정": "강남/압구정", "경기 근교": "경기 근교"},
         "vibes": {"#힙한": "#힙한", "#인스타감성": "#인스타감성", "#미니멀한": "#미니멀한", "#아늑한": "#아늑한", "#전통적인": "#전통적인"},
+        "cates": {"한식": "한식", "일식": "일식", "중식": "중식", "양식": "양식"},
         "map_btn": "💚 네이버 지도로 보기"
     },
     "EN": {
         "title": "Seoul & Gyeonggi Dining Matcher", "sub": "300 Premium Location Global Curations", "filter": "🧭 Curation Filter",
-        "region_label": "📍 Select District & Suburbs", "vibe_label": "🎨 Spatial Design Vibe", "budget_label": "💰 Max Budget per Guest (KRW)",
+        "region_label": "📍 Select District & Suburbs", "vibe_label": "🎨 Spatial Design Vibe", "cate_label": "🍽️ Cuisine Category", "budget_label": "💰 Max Budget per Guest (KRW)",
         "map_title": "🗺️ Regional Dining Spatial Map", "chart_title": "📊 Dining Value Positioning Analysis",
         "roulette_title": "🎰 Premium Dining Discovery Roulette", "roulette_sub": "Scans and randomly matches one finest dining spot matching filters.",
         "btn_roll": "✨ Activate Discovery Roulette", "rolling": "🔄 Analyzing Match Pool... [ {} ]", "match_success": "🍷 Matched Hotplace: {}",
-        "loc": "📍 Location", "vd": "✨ Style Vibe", "mn": "🍽️ Signature Culinary", "bg": "💰 Cost Value",
+        "loc": "📍 Location", "vd": "✨ Style Vibe", "ct": "🍽️ Category", "mn": "🍕 Signature Culinary", "bg": "💰 Cost Value",
         "pool_title": "📋 Open Matching Data Pool", "pool_sub": "Active Algorithm Spots: **{}** locations available (Click name for Naver Map)",
-        "err_no_data": "No dining matches found. Please expand your budget or area!", "err_empty": "The matching pool is empty. Please release filter restrictions.",
+        "err_no_data": "No dining matches found. Please expand your budget or parameters!", "err_empty": "The matching pool is empty. Please release filter restrictions.",
         "regions": {"성수": "Seongsu", "한남": "Hannam", "홍대/연남": "Hongdae/Yeonnam", "익선동": "Ikseon-dong", "강남/압구정": "Gangnam/Apgujeong", "경기 근교": "Gyeonggi Suburbs"},
         "vibes": {"#힙한": "#Hip & Trendy", "#인스타감성": "#Instagrammable", "#미니멀한": "#Minimalist", "#아늑한": "#Cozy & Warm", "#전통적인": "#Traditional"},
+        "cates": {"한식": "Korean", "일식": "Japanese", "중식": "Chinese", "양식": "Western"},
         "map_btn": "💚 Open in Naver Map"
     },
     "ZH": {
         "title": "首尔 & 京畿感性美食品配系统", "sub": "300个大型奢华空间专业精选策展", "filter": "🧭 策展筛选器",
-        "region_label": "📍 选择行政区与近郊", "vibe_label": "🎨 空间设计氛围", "budget_label": "💰 单人用餐预算上限 (韩元)",
+        "region_label": "📍 选择行政区与近郊", "vibe_label": "🎨 空间设计氛围", "cate_label": "🍽️ 美食料理菜系", "budget_label": "💰 单人用餐预算上限 (韩元)",
         "map_title": "🗺️ 广域美食品类分布地图", "chart_title": "📊 餐厅价值定位量化分析",
         "roulette_title": "🎰 奢华美食推荐智慧轮盘", "roulette_sub": "在您启用的搜索过滤范围内自动检索并随机匹配一个空间。",
         "btn_roll": "✨ 启动感性推荐轮盘", "rolling": "🔄 匹配池超高速分析中... [ {} ]", "match_success": "🍷 智选匹配空间: {}",
-        "loc": "📍 地区位置", "vd": "✨ 风格氛围", "mn": "🍽️ 核心招牌菜单", "bg": "💰 用餐成本",
+        "loc": "📍 地区位置", "vd": "✨ 风格氛围", "ct": "🍽️ 菜系分类", "mn": "🍕 核心招牌菜单", "bg": "💰 用餐成本",
         "pool_title": "📋 开放式数据匹配池 (Pool)", "pool_sub": "当前算法有效餐饮店: **{}** 间可供查看 (点击名称跳转至Naver地图)",
-        "err_no_data": "找不到符合当前筛选条件的餐厅。请扩大预算或区域范围！", "err_empty": "匹配池处于真空状态。请放宽筛选限制。",
+        "err_no_data": "找不到符合当前筛选条件的餐厅。请放宽限制！", "err_empty": "匹配池处于真空状态。请放宽筛选限制。",
         "regions": {"성수": "圣水", "한남": "汉南", "홍대/연남": "弘大/延南", "익선동": "益善洞", "강남/압구정": "江南/狎鸥亭", "경기 근교": "京畿道近郊"},
         "vibes": {"#힙한": "#时髦潮店", "#인스타감성": "#网红打卡", "#미니멀한": "#极简主义", "#아늑한": "#舒适温馨", "#전통적인": "#传统古風"},
+        "cates": {"한식": "韩食", "일식": "日食", "중식": "中餐", "양식": "西餐"},
         "map_btn": "💚 在Naver地图中打开"
     },
     "JA": {
         "title": "ソウル＆京畿 感性グルメマッチング", "sub": "300の大規模プレミアムロケーション選定", "filter": "🧭 キュレーションフィルタ",
-        "region_label": "📍 行政区・郊外エリアの選択", "vibe_label": "🎨 空間デザインのムード", "budget_label": "💰 1人あたりの上限予算 (ウォン)",
+        "region_label": "📍 行政区・郊外エリアの選択", "vibe_label": "🎨 空間デザインのムード", "cate_label": "🍽️ 料理カテゴリー", "budget_label": "💰 1人あたりの上限予算 (ウォン)",
         "map_title": "🗺️ 広域ダイニング空間分布マップ", "chart_title": "📊 ダイニング価値ポジショニング分析",
-        "roulette_title": "🎰 プレミアムダイニング マッチングルーレット", "roulette_sub": "選択された条件を満たす極上の空間をスキャンし、ランダムでマッチングします。",
-        "btn_roll": "✨ ディスカбариールーレット起動", "rolling": "🔄 マッチングプールを高速分析中... [ {} ]", "match_success": "🍷 マッチング空間: {}",
-        "loc": "📍 ロケーション", "vd": "✨ スタイルムード", "mn": "🍽️ シグネチャーメニュー", "bg": "💰 コ스트バリュー",
+        "roulette_title": "🎰 プレミアムダイニング 마ッチングルーレット", "roulette_sub": "選択された条件を満たす極上の空間をスキャンし、ランダムでマッチングします。",
+        "btn_roll": "✨ ディスカバリールーレット起動", "rolling": "🔄 マッチングプールを高速分析中... [ {} ]", "match_success": "🍷 マッチング空間: {}",
+        "loc": "📍 ロケーション", "vd": "✨ スタイルムード", "ct": "🍽️ 料理の種類", "mn": "🍕 シグネチャーメニュー", "bg": "💰 コストバリュー",
         "pool_title": "📋 オープンマッチングデータプール", "pool_sub": "現在アルゴリズム内の有効スポット: **{}** 軒 (店名クリックでNaverマップへ)",
-        "err_no_data": "条件に合うグルメが見つかりません。予算上限やエリアを広げてみてください！", "err_empty": "プールが空です。フィルターの制約を緩和してください。",
+        "err_no_data": "条件에 맞는 グルメが見つかりません。条件を広げてみてください！", "err_empty": "プールが空です。フィルターの制約を緩和してください。",
         "regions": {"성수": "聖水(ソンス)", "한남": "漢南(ハンナム)", "홍대/연남": "弘大/延南", "익선동": "益善洞(イクソンドン)", "강남/압구정": "江南/狎鴎亭", "경기 근교": "京畿郊外"},
         "vibes": {"#힙한": "#ヒップな", "#인스타감성": "#インスタ映え", "#미니멀한": "#ミニマルな", "#아늑한": "#居心地の良い", "#전통적인": "#伝統的な"},
+        "cates": {"한식": "韓国料理", "일식": "日本料理", "중식": "中華料理", "양식": "洋食"},
         "map_btn": "💚 Naverマップで見る"
     }
 }
@@ -84,7 +88,6 @@ st.markdown("""
     .stButton>button { background: #0f172a !important; color: #ffffff !important; border-radius: 8px !important; border: none !important; padding: 14px 28px !important; font-size: 15px !important; font-weight: 700 !important; width: 100%; transition: all 0.25s ease; }
     .stButton>button:hover { background: #334155 !important; box-shadow: 0 4px 12px rgba(51,65,85,0.25); }
     
-    /* 네이버 지도 바로가기 그린 버튼 스펙 */
     .naver-btn { display: inline-block; background-color: #03c75a !important; color: white !important; font-weight: 700; padding: 10px 20px; border-radius: 6px; text-decoration: none; margin-top: 15px; font-size: 14px; text-align: center; transition: background 0.2s; }
     .naver-btn:hover { background-color: #02b34f !important; color: white !important; }
     </style>
@@ -118,26 +121,36 @@ else:
     st.error("⚠️ 'restaurants.txt' 파일이 누락되었습니다.")
     st.stop()
 
-# 5. 🎯 사이드바 필터 리얼타임 변환 연동
+# 5. 🎯 사이드바 필터 리얼타임 변환 및 다국어 역추적 연동
 regions_pool = ["성수", "한남", "홍대/연남", "익선동", "강남/압구정", "경기 근교"]
 vibes_pool = ["#힙한", "#인스타감성", "#미니멀한", "#아늑한", "#전통적인"]
+cates_pool = ["한식", "일식", "중식", "양식"]
 
 translated_regions = [T["regions"][r] for r in regions_pool]
 translated_vibes = [T["vibes"][v] for v in vibes_pool]
+translated_cates = [T["cates"][c] for c in cates_pool]
 
 region_reverse_map = {T["regions"][r]: r for r in regions_pool}
 vibe_reverse_map = {T["vibes"][v]: v for v in vibes_pool}
+cate_reverse_map = {T["cates"][c]: c for c in cates_pool}
 
 st.sidebar.markdown(f"<h3 style='color:#0f172a;'>{T['filter']}</h3>", unsafe_allow_html=True)
 
 selected_regions_trans = st.sidebar.multiselect(T["region_label"], options=translated_regions, default=translated_regions)
 selected_vibes_trans = st.sidebar.multiselect(T["vibe_label"], options=translated_vibes, default=translated_vibes)
+selected_cates_trans = st.sidebar.multiselect(T["cate_label"], options=translated_cates, default=translated_cates)
 budget = st.sidebar.slider(T["budget_label"], min_value=int(df["평균가격"].min()), max_value=int(df["평균가격"].max()), value=95000, step=1000)
 
 final_regions = [region_reverse_map[tr] for tr in selected_regions_trans]
 final_vibes = [vibe_reverse_map[tv] for tv in selected_vibes_trans]
+final_cates = [cate_reverse_map[tc] for tc in selected_cates_trans]
 
-filtered_df = df[(df["지역"].isin(final_regions)) & (df["분위기"].isin(final_vibes)) & (df["평균가격"] <= budget)]
+# 데이터에 '카테고리' 컬럼이 존재할 경우에만 다중 필터 적용 구현
+if "카테고리" in df.columns:
+    filtered_df = df[(df["지역"].isin(final_regions)) & (df["분위기"].isin(final_vibes)) & (df["카테고리"].isin(final_cates)) & (df["평균가격"] <= budget)]
+else:
+    filtered_df = df[(df["지역"].isin(final_regions)) & (df["분위기"].isin(final_vibes)) & (df["평균가격"] <= budget)]
+    st.sidebar.warning("⚠️ txt 파일 첫 줄에 '카테고리' 컬럼 명을 먼저 추가해 주세요!")
 
 # 6. 🎛️ 레이아웃 구성
 left_col, right_col = st.columns([3, 2])
@@ -183,9 +196,11 @@ with right_col:
             roulette_placeholder.empty()
             random_pick = filtered_df.sample(n=1).iloc[0]
             
-            # 네이버 지도 검색 전용 쿼리 URL 인코딩 연동
             encoded_query = urllib.parse.quote(f"{random_pick['지역']} {random_pick['식당명']}")
             naver_map_url = f"https://map.naver.com/v5/search/{encoded_query}"
+            
+            # 카테고리 정보가 텍스트에 들어있을 경우 카드에 렌더링하도록 예외 처리
+            cate_val = T["cates"][random_pick['카테고리']] if "카테고리" in random_pick else "-"
             
             card_html = f"""
             <div class="premium-card">
@@ -193,6 +208,7 @@ with right_col:
                 <hr style="border-top: 1px solid #e2e8f0; margin:14px 0;">
                 <div class="card-label">{T["loc"]}</div><div class="card-value">{T["regions"][random_pick['지역']]}</div>
                 <div class="card-label">{T["vd"]}</div><div class="card-value" style="color:#2563eb !important;">{T["vibes"][random_pick['분위기']]}</div>
+                <div class="card-label">{T["ct"]}</div><div class="card-value">{cate_val}</div>
                 <div class="card-label">{T["mn"]}</div><div class="card-value">{random_pick['대표메뉴']}</div>
                 <div class="card-label">{T["bg"]}</div><div class="card-value" style="font-size:18px; color:#0f172a;">₩{random_pick['평균가격']:,}원</div>
                 <a href="{naver_map_url}" target="_blank" class="naver-btn">{T['map_btn']}</a>
@@ -210,20 +226,22 @@ with right_col:
         display_df = filtered_df.copy()
         display_df["지역"] = display_df["지역"].map(T["regions"])
         display_df["분위기"] = display_df["분위기"].map(T["vibes"])
+        if "카테고리" in display_df.columns:
+            display_df["카테고리"] = display_df["카테고리"].map(T["cates"])
         display_df["평균가격"] = display_df["평균가격"].map("{:,}원".format)
         
-        # 데이터프레임 내 식당명에 네이버 지도 하이퍼링크 직접 바인딩
         display_df["식당명"] = display_df.apply(
             lambda r: f"https://map.naver.com/v5/search/{urllib.parse.quote(r['지역'] + ' ' + r['식당명'])}", axis=1
         )
         
-        # st.data_editor의 column_config를 활용해 링크화 세팅
+        target_cols = ["식당명", "지역", "분위기", "카테고리", "대표메뉴", "평균가격"] if "카테고리" in display_df.columns else ["식당명", "지역", "분위기", "대표메뉴", "평균가격"]
+        
         st.data_editor(
-            display_df[["식당명", "지역", "분위기", "대표메뉴", "평균가격"]],
+            display_df[target_cols],
             column_config={
                 "식당명": st.column_config.LinkColumn(
                     "식당명 (Naver Map)",
-                    display_text=r"https://map\.naver\.com/v5/search/.*%20(.*)" # 링크 주소에서 원래 식당 이름만 추출하여 깔끔하게 표시
+                    display_text=r"https://map\.naver\.com/v5/search/.*%20(.*)"
                 )
             },
             use_container_width=True,
