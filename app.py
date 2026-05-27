@@ -160,3 +160,73 @@ with left_col:
         st.plotly_chart(fig, use_container_width=True)
 
 with right_col:
+    st.markdown(f"##### {T['roulette_title']}")
+    st.write(T["roulette_sub"])
+    
+    roulette_placeholder = st.empty()
+    result_placeholder = st.empty()
+    
+    if st.button(T["btn_roll"]):
+        if not filtered_df.empty:
+            result_placeholder.empty()
+            duration = 1.3
+            start_time = time.time()
+            all_matching_names = filtered_df["식당명"].tolist()
+            
+            while time.time() - start_time < duration:
+                elapsed = time.time() - start_time
+                wait_time = 0.03 + (elapsed / duration) ** 2 * 0.1
+                temp_name = random.choice(all_matching_names)
+                roulette_placeholder.html(f'<div class="roulette-display">{T["rolling"].format(temp_name)}</div>')
+                time.sleep(wait_time)
+            
+            roulette_placeholder.empty()
+            random_pick = filtered_df.sample(n=1).iloc[0]
+            
+            # 네이버 지도 검색 전용 쿼리 URL 인코딩 연동
+            encoded_query = urllib.parse.quote(f"{random_pick['지역']} {random_pick['식당명']}")
+            naver_map_url = f"https://map.naver.com/v5/search/{encoded_query}"
+            
+            card_html = f"""
+            <div class="premium-card">
+                <h3 style="margin-top:0; color:#0f172a !important; font-size:22px; font-weight:900;">{T["match_success"].format(random_pick['식당명'])}</h3>
+                <hr style="border-top: 1px solid #e2e8f0; margin:14px 0;">
+                <div class="card-label">{T["loc"]}</div><div class="card-value">{T["regions"][random_pick['지역']]}</div>
+                <div class="card-label">{T["vd"]}</div><div class="card-value" style="color:#2563eb !important;">{T["vibes"][random_pick['분위기']]}</div>
+                <div class="card-label">{T["mn"]}</div><div class="card-value">{random_pick['대표메뉴']}</div>
+                <div class="card-label">{T["bg"]}</div><div class="card-value" style="font-size:18px; color:#0f172a;">₩{random_pick['평균가격']:,}원</div>
+                <a href="{naver_map_url}" target="_blank" class="naver-btn">{T['map_btn']}</a>
+            </div>
+            """
+            result_placeholder.html(card_html)
+        else:
+            st.error(T["err_empty"])
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(f"##### {T['pool_title']}")
+    st.markdown(T["pool_sub"].format(len(filtered_df)))
+    
+    if not filtered_df.empty:
+        display_df = filtered_df.copy()
+        display_df["지역"] = display_df["지역"].map(T["regions"])
+        display_df["분위기"] = display_df["분위기"].map(T["vibes"])
+        display_df["평균가격"] = display_df["평균가격"].map("{:,}원".format)
+        
+        # 데이터프레임 내 식당명에 네이버 지도 하이퍼링크 직접 바인딩
+        display_df["식당명"] = display_df.apply(
+            lambda r: f"https://map.naver.com/v5/search/{urllib.parse.quote(r['지역'] + ' ' + r['식당명'])}", axis=1
+        )
+        
+        # st.data_editor의 column_config를 활용해 링크화 세팅
+        st.data_editor(
+            display_df[["식당명", "지역", "분위기", "대표메뉴", "평균가격"]],
+            column_config={
+                "식당명": st.column_config.LinkColumn(
+                    "식당명 (Naver Map)",
+                    display_text=r"https://map\.naver\.com/v5/search/.*%20(.*)" # 링크 주소에서 원래 식당 이름만 추출하여 깔끔하게 표시
+                )
+            },
+            use_container_width=True,
+            disabled=True,
+            hide_index=True
+        )
